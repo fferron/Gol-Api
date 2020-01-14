@@ -90,7 +90,7 @@ namespace Gol.Controllers
         {
             try
             {
-                var airplane = await _repository.DeleteAirplane(id);
+                var airplane = await _repository.FindAirplane(id);
                 await _repository.DeleteAirplane(airplane);
 
                 return NoContent();
