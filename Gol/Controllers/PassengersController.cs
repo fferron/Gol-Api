@@ -105,6 +105,53 @@ namespace Gol.Controllers
             }
         }
 
+        [HttpGet()]
+        [Route("GetAllPassenger")]
+        public async Task<IActionResult> GetAllPassenger()
+        {
+            try
+            {
+                var result = await _repository.GetAllPassenger();
+                return Ok(result);
+            }
+            catch (AirplaneException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Ocorreu um erro interno no servidor.");
+            }
+        }
+
+        [HttpPost]
+        [Route("UpdatePassenger")]
+        public async Task<IActionResult> UpdatePassenger([FromBody]Passenger passenger)
+        {
+            try
+            {
+                passenger.RegistryCreationDate = DateTime.Now;
+
+                var result = await _repository.UpdatePassenger(passenger);
+
+                if (result.ID != 0)
+                {
+                    return Ok(passenger);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (AirplaneException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Ocorreu um erro interno no servidor.");
+            }
+        }
 
     }
 }

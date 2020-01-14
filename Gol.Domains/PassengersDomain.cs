@@ -226,5 +226,44 @@ namespace Gol.Domains
             }
         }
 
+        /// <summary>
+        /// Saves a new entity to database.
+        /// </summary>
+        /// <param name="entity">The entity to be saved.</param>
+        /// <exception cref="PassengerException">Throws when something goes worng. The InnerException can be used to have more details.</exception>
+        /// <returns></returns>
+        public async Task<Passenger> UpdatePassenger(Passenger entity)
+        {
+            try
+            {
+                var passenger = default(Passenger);
+                using (_context = new GolContext(_configuration))
+                {
+                    var entry = _context.Update(entity);
+                    var rowsAffected = await _context.SaveChangesAsync();
+
+                    if (rowsAffected > 0)
+                    {
+                        passenger = entry.Entity;
+                    }
+                }
+
+                if (passenger == null)
+                {
+                    throw new PassengerException("O passageiro não foi atualizado na base de dados.");
+                }
+
+                return passenger;
+            }
+            catch (PassengerException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new PassengerException("Não foi possível atualizar o passageiro informado.", e);
+            }
+        }
+
     }
 }

@@ -136,5 +136,44 @@ namespace Gol.Domains
                 throw new AirplaneException("Não foi possível remover o avião informado.", e);
             }
         }
+
+        /// <summary>
+        /// Saves a new entity to database.
+        /// </summary>
+        /// <param name="entity">The entity to be saved.</param>
+        /// <exception cref="AirplaneException">Throws when something goes worng. The InnerException can be used to have more details.</exception>
+        /// <returns></returns>
+        public async Task<Airplane> UpdateAirplane(Airplane entity)
+        {
+            try
+            {
+                var airplane = default(Airplane);
+                using (_context = new GolContext(_configuration))
+                {
+                    var entry = _context.Update(entity);
+                    var rowsAffected = await _context.SaveChangesAsync();
+
+                    if (rowsAffected > 0)
+                    {
+                        airplane = entry.Entity;
+                    }
+                }
+
+                if (airplane == null)
+                {
+                    throw new AirplaneException("O avião não foi atualizado na base de dados.");
+                }
+
+                return airplane;
+            }
+            catch (AirplaneException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new AirplaneException("Não foi possível atualizar o avião informado.", e);
+            }
+        }
     }
 }

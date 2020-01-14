@@ -13,5 +13,6 @@ namespace Gol.Domains.Repository
         Task<Passenger> ChangePassenger(int id, int IdAirplane);
         Task<IEnumerable<Passenger>> ListAllPassengerByAirplane(int idAirplane);
         Task<IEnumerable<Passenger>> GetAllPassenger();
+        Task<Passenger> UpdatePassenger(Passenger request);
     }
 }

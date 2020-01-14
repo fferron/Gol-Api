@@ -104,5 +104,34 @@ namespace Gol.Controllers
                 return BadRequest("Ocorreu um erro interno no servidor.");
             }
         }
+
+        [HttpPost]
+        [Route("UpdateAirplane")]
+        public async Task<IActionResult> UpdateAirplane([FromBody]Airplane airplane)
+        {
+            try
+            {
+                airplane.RegistryCreationDate = DateTime.Now;
+
+                var result = await _repository.UpdateAirplane(airplane);
+
+                if (result.ID != 0)
+                {
+                    return Ok(airplane);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (AirplaneException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Ocorreu um erro interno no servidor.");
+            }
+        }
     }
 }
